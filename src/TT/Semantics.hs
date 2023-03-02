@@ -1,3 +1,4 @@
+{-# LANGUAGE DerivingVia #-}
 module TT.Semantics where
 
 import qualified TT.Syntax as Syntax
@@ -24,7 +25,7 @@ data Value
   
 -- | Left to right index
 newtype Var = Level Int
-  deriving Eq
+  deriving (Eq, Num) via Int
 
 data Stuck
   = Var Var

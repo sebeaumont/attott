@@ -1,10 +1,12 @@
 {-# LANGUAGE NoImplicitPrelude #-}
+{-# LANGUAGE DerivingVia #-}
 module TT.Syntax where
 
-import Prelude (Int)
+import Prelude (Int, Num, Eq)
 
 -- | De Bruijn index 
-type Ix = Int
+newtype Ix = Ix Int
+  deriving (Eq, Num) via Int
 
 -- | Marker type for terms as binders
 newtype Binder a = Binder a
