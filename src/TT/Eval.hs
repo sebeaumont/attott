@@ -9,12 +9,12 @@ import qualified TT.Syntax as S
 proj :: V.Env -> S.Ix -> V.Value
 proj env ix =
   case env of
-    V.Empty -> undefined
+    V.Empty -> V.Fail "empty env"
     V.Extend env' v ->
       if ix == 0 then v
       else proj env' (ix - 1)
 
-      
+-- | evaluate syntatic term to semantic value      
 eval :: V.Env -> S.Term -> V.Value
 eval env term =
   case term of
@@ -43,8 +43,12 @@ eval env term =
     S.Snd pair ->
       snd (eval env pair)
 
+    S.Bool -> V.Bool
+    S.True -> V.True
+    S.False -> V.False
+
     -- TODO more here
-    _ -> undefined
+    x -> V.Fail $ show x
 
 app :: V.Value -> V.Value -> V.Value
 app f x = case f of
@@ -57,7 +61,7 @@ app f x = case f of
         let stuck' = V.App { V.fn = stuck, V.arg = x, V.base = base }
             fiber = eval (V.Extend env x) fam
         in V.Stuk stuck' fiber
-  _ -> undefined
+  x -> V.Fail $ show x
 
 fst :: V.Value -> V.Value
 fst = \case
@@ -66,7 +70,7 @@ fst = \case
     case typ of
       V.Sg base _ ->
         V.Stuk { V.value = V.Fst vs,  V.typ = base }
-  _ -> undefined
+  x -> V.Fail $ show x
 
 snd :: V.Value -> V.Value
 snd pair = case pair of
@@ -77,5 +81,5 @@ snd pair = case pair of
         let u = fst pair
             fiber = eval (V.Extend env u) fam
         in V.Stuk { V.value = V.Snd vs,  V.typ = fiber }
-      _ -> undefined
-  _ -> undefined
+      x -> V.Fail $ show x
+  x -> V.Fail $ show x
