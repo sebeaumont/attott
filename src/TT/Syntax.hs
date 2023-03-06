@@ -31,8 +31,4 @@ data Term
   -- | * Boolean induction
   | BoolInd { motive :: Binder Term , tcase :: Term, fcase :: Term, scrut :: Term }
   deriving (Show)
-
-test1, test2 :: Term
-test1 = Lam (Binder (Var (Ix 0)))
-test2 = App test1 True
  
